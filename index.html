@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#141414" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="NekoFlix" />
+    <link rel="manifest" href="/manifest.json" />
+    <title>NekoFlix</title>
+    <link rel="preconnect" href="https://api.themoviedb.org" />
+    <link rel="preconnect" href="https://image.tmdb.org" />
+    <link rel="preconnect" href="https://player.vidzee.wtf" />
+    <link rel="preconnect" href="https://vidlink.pro" />
+    <link rel="preconnect" href="https://vidnest.fun" />
+    <link rel="preconnect" href="https://player.videasy.net" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css">
+    <!-- HLS.js for custom player -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.7/dist/hls.min.js"></script>
+  </head>
+  <body>
+    <!-- SPLASH SCREEN -->
+    <div class="splash-screen" id="splashScreen">
+      <div class="splash-content">
+        <!-- Cat face SVG with draw animation -->
+        <svg class="splash-cat" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- Left ear - rounder, stubbier -->
+          <path class="cat-ear cat-ear-left" d="M62 82 Q50 55 55 42 Q62 38 75 60 Z" fill="none" stroke="#FF6B35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Right ear - rounder, stubbier -->
+          <path class="cat-ear cat-ear-right" d="M138 82 Q150 55 145 42 Q138 38 125 60 Z" fill="none" stroke="#FF6B35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Inner ear left -->
+          <path class="cat-ear-inner" d="M64 75 Q56 58 58 48 Q63 46 72 62 Z" fill="none" stroke="#9B59B6" stroke-width="1.5" opacity="0.6"/>
+          <!-- Inner ear right -->
+          <path class="cat-ear-inner" d="M136 75 Q144 58 142 48 Q137 46 128 62 Z" fill="none" stroke="#9B59B6" stroke-width="1.5" opacity="0.6"/>
+          <!-- Head outline - much rounder, chubby cheeks -->
+          <circle class="cat-head" cx="100" cy="112" r="52" fill="none" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+          <!-- Cheek puffs left -->
+          <path class="cat-head" d="M52 118 Q48 112 52 106" fill="none" stroke="#FF6B35" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+          <!-- Cheek puffs right -->
+          <path class="cat-head" d="M148 118 Q152 112 148 106" fill="none" stroke="#FF6B35" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+          <!-- Left eye - bigger, rounder for cute -->
+          <ellipse class="cat-eye cat-eye-left" cx="80" cy="108" rx="10" ry="11" fill="#FF6B35" opacity="0"/>
+          <!-- Right eye - bigger, rounder for cute -->
+          <ellipse class="cat-eye cat-eye-right" cx="120" cy="108" rx="10" ry="11" fill="#FF6B35" opacity="0"/>
+          <!-- Eye shine left -->
+          <circle class="cat-eye-shine" cx="83" cy="104" r="3" fill="white" opacity="0"/>
+          <!-- Eye shine right -->
+          <circle class="cat-eye-shine" cx="123" cy="104" r="3" fill="white" opacity="0"/>
+          <!-- Eye pupils - rounder -->
+          <ellipse class="cat-pupil cat-pupil-left" cx="80" cy="108" rx="4" ry="7" fill="#141414" opacity="0"/>
+          <ellipse class="cat-pupil cat-pupil-right" cx="120" cy="108" rx="4" ry="7" fill="#141414" opacity="0"/>
+          <!-- Nose - cuter, wider triangle -->
+          <path class="cat-nose" d="M95 125 Q100 130 105 125 Q100 128 95 125 Z" fill="#FF6B35" opacity="0"/>
+          <!-- Blush circles -->
+          <circle class="cat-blush" cx="68" cy="120" r="6" fill="#FF6B35" opacity="0"/>
+          <circle class="cat-blush" cx="132" cy="120" r="6" fill="#FF6B35" opacity="0"/>
+          <!-- Mouth - cute w-shape (cat smile) -->
+          <path class="cat-mouth" d="M93 131 Q96 134 100 130 Q104 134 107 131" fill="none" stroke="#FF6B35" stroke-width="2" stroke-linecap="round" opacity="0"/>
+          <!-- Whiskers left -->
+          <line class="cat-whisker whisker-l1" x1="68" y1="116" x2="38" y2="112" stroke="#FF6B35" stroke-width="1.5" stroke-linecap="round" opacity="0"/>
+          <line class="cat-whisker whisker-l2" x1="68" y1="122" x2="36" y2="122" stroke="#FF6B35" stroke-width="1.5" stroke-linecap="round" opacity="0"/>
+          <line class="cat-whisker whisker-l3" x1="68" y1="128" x2="38" y2="134" stroke="#FF6B35" stroke-width="1.5" stroke-linecap="round" opacity="0"/>
+          <!-- Whiskers right -->
+          <line class="cat-whisker whisker-r1" x1="132" y1="116" x2="162" y2="112" stroke="#FF6B35" stroke-width="1.5" stroke-linecap="round" opacity="0"/>
+          <line class="cat-whisker whisker-r2" x1="132" y1="122" x2="164" y2="122" stroke="#FF6B35" stroke-width="1.5" stroke-linecap="round" opacity="0"/>
+          <line class="cat-whisker whisker-r3" x1="132" y1="128" x2="162" y2="134" stroke="#FF6B35" stroke-width="1.5" stroke-linecap="round" opacity="0"/>
+        </svg>
+        <!-- Logo text -->
+        <div class="splash-logo">
+          <span class="splash-logo-text">NekoFlix</span>
+          <span class="splash-tagline">purrfect streaming</span>
+        </div>
+        <!-- Loading paw prints -->
+        <div class="splash-paws">
+          <span class="splash-paw"></span>
+          <span class="splash-paw"></span>
+          <span class="splash-paw"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar">
+      <button class="mobile-menu-btn" id="mobileMenuBtn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+      <a href="#" class="nav-logo" data-page="home">NekoFlix</a>
+      <ul class="nav-links">
+        <li><a href="#" data-page="home" class="active">Home</a></li>
+        <li><a href="#" data-page="movies">Movies</a></li>
+        <li><a href="#" data-page="tv">TV Shows</a></li>
+        <li><a href="#" data-page="platforms">Platforms</a></li>
+        <li><a href="#" data-page="browse-hub">Browse</a></li>
+        <li><a href="#" data-page="watchlist">My List</a></li>
+        <li><a href="#" data-page="collections">Collections</a></li>
+        <li><a href="#" data-page="history">History</a></li>
+      </ul>
+      <div class="nav-right">
+        <button class="install-nav-btn" id="installNavBtn" onclick="installApp()" style="display:none">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Install
+        </button>
+        <div class="search-box" id="searchBox">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Titles, people, genres..."
+          />
+          <button class="search-btn" id="searchBtn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+          <div class="search-dropdown" id="searchDropdown"></div>
+        </div>
+        <button
+          class="mobile-menu-btn"
+          id="mobileSearchBtn"
+          style="margin-right: 0"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+      </div>
+    </nav>
+
+    <!-- SIDE NAVIGATION (MOBILE) -->
+    <div class="side-nav-overlay" id="sideNavOverlay"></div>
+    <div class="side-nav" id="sideNav">
+      <div class="side-nav-header">
+        <span class="nav-logo">NekoFlix</span>
+        <button class="side-nav-close" id="sideNavClose"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <ul class="side-nav-links">
+        <li>
+          <a href="#" data-page="home" class="active"
+            ><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>Home</a
+          >
+        </li>
+        <li>
+          <a href="#" data-page="movies"
+            ><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg></span>Movies</a
+          >
+        </li>
+        <li>
+          <a href="#" data-page="tv"
+            ><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg></span>TV Shows</a
+          >
+        </li>
+        <li>
+          <a href="#" data-page="watchlist"
+            ><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></span>My List</a
+          >
+        </li>
+        <li>
+          <a href="#" data-page="collections"
+            ><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg></span>Collections</a
+          >
+        </li>
+        <li>
+          <a href="#" data-page="history"
+            ><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>History</a
+          >
+        </li>
+        <li style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)">
+          <a href="#" data-page="platforms"
+            ><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>Platforms</a
+          >
+        </li>
+        <li>
+          <a href="#" data-page="browse-hub"
+            ><span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>Browse</a
+          >
+        </li>
+      </ul>
+      <div class="side-nav-footer">
+        <button class="install-btn" id="installBtn" onclick="installApp()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Install App
+        </button>
+      </div>
+    </div>
+
+    <!-- MOBILE FULLSCREEN SEARCH -->
+    <div class="mobile-search-overlay" id="mobileSearchOverlay">
+      <div class="mobile-search-header">
+        <input
+          type="text"
+          id="mobileSearchInput"
+          placeholder="Search movies, TV shows..."
+        />
+        <button class="mobile-search-cancel" id="mobileSearchCancel">
+          Cancel
+        </button>
+      </div>
+      <div class="mobile-search-results" id="mobileSearchResults"></div>
+    </div>
+
+    <!-- MOBILE INSTALL BANNER -->
+    <div class="mobile-install-banner" id="mobileInstallBanner">
+      <div class="mib-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      </div>
+      <div class="mib-text">
+        <strong>Install NekoFlix</strong>
+        <span>Add to home screen for the purrfect neko experience</span>
+      </div>
+      <button class="mib-install" onclick="installApp()">Install</button>
+      <button class="mib-close" onclick="dismissInstallBanner()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- LONG-PRESS CONTEXT MENU -->
+    <div class="context-menu" id="contextMenu">
+      <button class="context-menu-item" id="ctxPlay" onclick="ctxAction('play')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Play
+      </button>
+      <button class="context-menu-item" id="ctxList" onclick="ctxAction('list')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add to My List
+      </button>
+      <button class="context-menu-item" id="ctxCollection" onclick="ctxAction('collection')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+        Add to Collection
+      </button>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main id="mainContent"></main>
+
+    <!-- TRAILER FEED BUTTON -->
+    <button class="trailerfeed-btn" id="trailerFeedBtn" onclick="openTrailerFeed()">
+      <span class="surprise-tooltip">Trailers</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    </button>
+
+    <!-- PICK FOR ME BUTTON -->
+    <button class="pickforme-btn" id="pickForMeBtn" onclick="openPicker()">
+      <span class="surprise-tooltip">Pick for me</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18c-1.5 2-4 3-6 2s-2-3.5-1-5c1.5-2 4-3 6-2s2 3.5 1 5zm6-2c1 1.5 1 4-1 5s-4.5 0-6-2c-1-1.5-1-4 1-5s4.5 0 6 2zM8 11c0 1.5-1 3-2.5 3S3 12.5 3 11s1-3 2.5-3S8 9.5 8 11zm8 0c0 1.5 1 3 2.5 3S21 12.5 21 11s-1-3-2.5-3S16 9.5 16 11zm-4-4c0 1.5-1 3-2.5 3S7 8.5 7 7s1-3 2.5-3S12 5.5 12 7z"/></svg>
+    </button>
+
+    <!-- SURPRISE ME BUTTON -->
+    <button class="surprise-btn" id="surpriseBtn" onclick="surpriseMe()">
+      <span class="surprise-tooltip">Surprise me!</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+    </button>
+
+    <!-- TRAILER FEED OVERLAY -->
+    <div class="trailer-feed-overlay" id="trailerFeedOverlay">
+      <div class="trailer-feed-header">
+        <button class="trailer-feed-close" id="trailerFeedClose"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <span class="trailer-feed-label">Trailers</span>
+        <button class="trailer-feed-mute" id="trailerFeedMute"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+      </div>
+      <div class="trailer-feed-container" id="trailerFeedContainer"></div>
+      <div class="trailer-feed-nav">
+        <button class="trailer-feed-nav-btn" id="trailerFeedPrev" onclick="trailerFeedNav(-1)"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg></button>
+        <button class="trailer-feed-nav-btn" id="trailerFeedNext" onclick="trailerFeedNav(1)"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      </div>
+    </div>
+
+    <!-- GUIDED PICKER OVERLAY -->
+    <div class="picker-overlay" id="pickerOverlay">
+      <div class="picker-header">
+        <span class="picker-title">What are you in the mood for?</span>
+        <button class="picker-close" id="pickerClose"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div class="picker-progress" id="pickerProgress"></div>
+      <div class="picker-card-stack" id="pickerCardStack"></div>
+      <div class="picker-actions" id="pickerActions">
+        <button class="picker-action-btn picker-skip" id="pickerSkipBtn" onclick="pickerSwipe('left')"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <button class="picker-action-btn picker-like" id="pickerLikeBtn" onclick="pickerSwipe('right')"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button>
+      </div>
+      <div class="picker-results" id="pickerResults" style="display:none"></div>
+    </div>
+
+    <!-- DETAIL MODAL -->
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="modal" id="modalContent"></div>
+    </div>
+
+    <!-- PLAYER OVERLAY -->
+    <div class="player-overlay" id="playerOverlay">
+      <div class="player-video-section">
+        <div class="drag-handle" id="playerDragHandle"></div>
+        <!-- Custom Video.js player (shown when extraction succeeds) -->
+        <div class="custom-player-wrapper" id="customPlayerWrapper" style="display:none">
+          <video id="customVideo" class="video-js" playsinline></video>
+          <!-- Custom player controls overlay -->
+          <div class="cp-overlay-top" id="cpOverlayTop">
+            <button class="cp-btn" onclick="closePlayer()"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
+            <span class="cp-title" id="cpTitle"></span>
+            <button class="cp-btn" id="cpLockBtn" onclick="togglePlayerLock()"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></button>
+          </div>
+          <div class="cp-overlay-bottom" id="cpOverlayBottom">
+            <div class="cp-seek" id="cpSeek">
+              <div class="cp-seek-track">
+                <div class="cp-seek-buffer" id="cpBuffer"></div>
+                <div class="cp-seek-progress" id="cpProgress"></div>
+              </div>
+              <input type="range" class="cp-seek-input" id="cpSeekInput" min="0" max="100" value="0" step="0.1">
+            </div>
+            <div class="cp-controls">
+              <button class="cp-btn" id="cpPlayBtn" onclick="toggleCustomPlay()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+              <span class="cp-time" id="cpTime">0:00 / 0:00</span>
+              <div class="cp-spacer"></div>
+              <button class="cp-btn" id="cpSubBtn" onclick="toggleCpSubs()" title="Subtitles"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="6" y1="14" x2="10" y2="14"/><line x1="12" y1="14" x2="18" y2="14"/><line x1="6" y1="18" x2="14" y2="18"/></svg></button>
+              <button class="cp-btn" id="cpSettingsBtn" onclick="toggleCpSettings()"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68 1.65 1.65 0 0 0 9 3V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+              <button class="cp-btn" id="cpPipBtn" onclick="toggleCpPip()"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><rect x="12" y="9" width="8" height="6" rx="1" fill="currentColor" opacity="0.3"/></svg></button>
+              <button class="cp-btn" id="cpFullBtn" onclick="toggleCpFullscreen()"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
+            </div>
+          </div>
+          <!-- Settings panel -->
+          <div class="cp-settings-panel" id="cpSettingsPanel">
+            <div class="cp-settings-section" id="cpQualitySection"></div>
+            <div class="cp-settings-section" id="cpSpeedSection"></div>
+          </div>
+          <!-- Loading spinner -->
+          <div class="cp-loading" id="cpLoading"><div class="cp-spinner"></div></div>
+          <!-- Lock overlay -->
+          <div class="cp-lock-overlay" id="cpLockOverlay" style="display:none" onclick="togglePlayerLock()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+        </div>
+        <!-- Iframe fallback player (for non-extractable servers) -->
+        <iframe
+          class="player-iframe"
+          id="playerIframe"
+          allowfullscreen
+          allow="autoplay;fullscreen;picture-in-picture"
+        ></iframe>
+        <div class="mini-player-controls">
+          <button class="mini-player-expand" onclick="maximizePlayer()" aria-label="Expand player">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          </button>
+          <button class="mini-player-pause" id="miniPlayerPause" onclick="toggleMiniPlayerPause()" aria-label="Pause/Resume">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+          </button>
+          <button class="mini-player-close" onclick="closeMiniPlayer()" aria-label="Close player">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="player-header">
+        <button class="back-btn" id="playerBack"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
+        <span class="now-playing" id="nowPlaying"></span>
+        <button
+          class="panel-toggle"
+          id="serverToggle"
+          onclick="togglePanel('server')"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68 1.65 1.65 0 0 0 9 3V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Server
+        </button>
+      </div>
+      <div class="player-details" id="playerDetails"></div>
+      <!-- Server Panel -->
+      <div class="player-panels">
+        <div class="player-panel" id="serverPanel">
+          <div class="panel-header">
+            <h3><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68 1.65 1.65 0 0 0 9 3V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Servers</h3>
+            <button class="panel-close" onclick="togglePanel('server')">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div class="panel-body" id="serverList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM TAB BAR (MOBILE) -->
+    <nav class="bottom-tab-bar" id="bottomTabBar">
+      <ul>
+        <li><a href="#" data-page="home" class="active"><span class="tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>Home</a></li>
+        <li><a href="#" data-page="movies"><span class="tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg></span>Movies</a></li>
+        <li><a href="#" data-page="tv"><span class="tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg></span>TV</a></li>
+        <li><a href="#" data-page="watchlist"><span class="tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></span>My List</a></li>
+        <li><a href="#" data-page="search" id="bottomSearchTab"><span class="tab-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>Search</a></li>
+      </ul>
+    </nav>
+
+    <script src="/app.js" defer></script>
+    <script>
+      // Dismiss splash screen after animations complete or on app ready
+      (function() {
+        const splash = document.getElementById('splashScreen');
+        const minTime = 3200; // minimum display time for full animation
+        const startTime = Date.now();
+
+        function dismissSplash() {
+          const elapsed = Date.now() - startTime;
+          const remaining = Math.max(0, minTime - elapsed);
+          setTimeout(function() {
+            splash.classList.add('fade-out');
+            setTimeout(function() {
+              splash.remove();
+            }, 600);
+          }, remaining);
+        }
+
+        // Dismiss when page fully loads or after max timeout
+        window.addEventListener('load', dismissSplash);
+        setTimeout(dismissSplash, 5000); // failsafe max 5s
+      })();
+    </script>
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"75124c326cb447fe934cde04713ae013","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
